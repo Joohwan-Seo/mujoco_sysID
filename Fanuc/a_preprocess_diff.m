@@ -3,13 +3,14 @@ addpath('Dataset/')
 
 dir = '/Dataset';
 
-N = 4;
+N = 1;
 dt = 0.002;
 %% Reading data, then store into the cell
 dataset = cell(N,1);
  for i = 1 : N
     disp(i)
-    name = [dir,'/square_PIH_fanuc_new_real_',num2str(i-1),'.csv'];
+%     name = [dir,'/square_PIH_fanuc_rework_',num2str(i-1),'.csv'];
+    name = [dir,'/square_PIH_gravity_re.csv'];
     T = readtable(name);
     
     dataset{i}.q = [T.q1, T.q2, T.q3, T.q4, T.q5, T.q6];
@@ -44,15 +45,16 @@ for i = 1 : N
 
     disp(i)
 
-    if i == 1
-        dataset{i}.ddq(3616:3800,:) = [];
-        dataset{i}.dq(3616:3800,:) = [];
-        dataset{i}.q(3616:3800,:) = [];
-        dataset{i}.torque(3616:3800,:) = [];
-    end
+%     if i == 1
+%         dataset{i}.ddq(3616:3800,:) = [];
+%         dataset{i}.dq(3616:3800,:) = [];
+%         dataset{i}.q(3616:3800,:) = [];
+%         dataset{i}.torque(3616:3800,:) = [];
+%     end
     
 
 end
 
 %%
-save('matfiles/processed_data_square_PIH.mat','dataset');
+% save('matfiles/processed_data_square_PIH.mat','dataset');
+save('matfiles/processed_data_square_PIH_gravity.mat','dataset');

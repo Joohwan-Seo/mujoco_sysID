@@ -1,0 +1,6 @@
+clear; close all; clc;
+
+b_Fanuc_sysID_DH
+c_dynamic_reparameterization_full_param
+d_sysID_lasso_full_param_arm
+e_matrix_decompose_6DOF

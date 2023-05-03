@@ -1,4 +1,4 @@
-clear; close all; clc;
+clear;
 %%
 addpath('matfiles/')
 addpath('utils/')
@@ -20,7 +20,9 @@ Tau_set = [Tau_set; dataset{4}.torque];
 % std_tau = [5.8901   40.5046   13.0007    1.1680    0.2345    0.0559];
 % std_tau = [5.8901   40.5046   13.0007    1.1680    0.2345    0.001];
 % std_tau = [1.8061,1.3445,1.4437,1.1833,2.1091,1.8721];
-std_tau = std(Tau_set);
+% std_tau = std(Tau_set);
+
+% std_tau = [1.7341   20.8867   26.7979   13.2446    6.5856    1.4974];
 
 std_tau = ones(1,6);
 
@@ -37,30 +39,35 @@ for i = init : N
     tic
     M = length(q);
     force_stack = zeros(6*M,1);
-    W_stack = zeros(6*M,70);
-%     W_stack = zeros(6*M,64);
+%     force_stack_collection = zeros(M,6);
+%     W_stack = zeros(6*M,70);
+    W_stack = zeros(6*M,64);
     for k = 1 : M
         armature_term = [5*ddq(k,1), 5/2*ddq(k,2), 5/3*ddq(k,3), 5/4*ddq(k,4), 5/5*ddq(k,5), 5/6*ddq(k,6)];
-%         force_stack(6*(k-1)+1:6*k) = ((tau(k,:) - armature_term)./std_tau)';
-        force_stack(6*(k-1)+1:6*k) = ((tau(k,:))./std_tau)';
-        jacob_part = funJacobian_full_param_fanuc(q(k,1),q(k,2),q(k,3),q(k,4),q(k,5),q(k,6),...
-                                  dq(k,1),dq(k,2),dq(k,3),dq(k,4),dq(k,5),dq(k,6),...
-                                  ddq(k,1),ddq(k,2),ddq(k,3),ddq(k,4),ddq(k,5),ddq(k,6));
-%         jacob_part = funJacobian_fanuc_damp_fric(q(k,1),q(k,2),q(k,3),q(k,4),q(k,5),q(k,6),...
+        force_stack(6*(k-1)+1:6*k) = ((tau(k,:) - armature_term)./std_tau)';
+%         force_stack_collection(k,:) = tau(k,:) - armature_term;
+%         force_stack(6*(k-1)+1:6*k) = ((tau(k,:))./std_tau)';
+%         jacob_part = funJacobian_full_param_fanuc(q(k,1),q(k,2),q(k,3),q(k,4),q(k,5),q(k,6),...
 %                                   dq(k,1),dq(k,2),dq(k,3),dq(k,4),dq(k,5),dq(k,6),...
 %                                   ddq(k,1),ddq(k,2),ddq(k,3),ddq(k,4),ddq(k,5),ddq(k,6));
+        jacob_part = funJacobian_fanuc_damp_fric(q(k,1),q(k,2),q(k,3),q(k,4),q(k,5),q(k,6),...
+                                  dq(k,1),dq(k,2),dq(k,3),dq(k,4),dq(k,5),dq(k,6),...
+                                  ddq(k,1),ddq(k,2),ddq(k,3),ddq(k,4),ddq(k,5),ddq(k,6));
         W_stack(6*(k-1)+1:6*k, :) = jacob_part./std_tau';
     end
     dummy{i}.W_stack = W_stack;
     dummy{i}.force_stack = force_stack;
+%     dummy{i}.force_stack_collection = force_stack_collection;
     toc
 end
 
 W_big_stack = [];
 force_big_stack = [];
+force_collection_stack = [];
 for i = init : N
     W_big_stack = [W_big_stack; dummy{i}.W_stack];
     force_big_stack = [force_big_stack; dummy{i}.force_stack];
+%     force_collection_stack = [force_stack_collection; dummy{i}.force_stack_collection];
 end
 
 rank_W = rank(W_big_stack'*W_big_stack);

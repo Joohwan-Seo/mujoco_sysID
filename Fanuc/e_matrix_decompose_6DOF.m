@@ -1,4 +1,4 @@
-clear; close all; clc
+clear;
 %%
 addpath('utils/');
 addpath('generated_functions/')
@@ -25,15 +25,20 @@ M_reconstruct = sym(zeros(6,6));
 for i = 1:n_state
     tic
     param_mat = matrix_decomposer(M(:,i), idx);
-%     M_reconstruct(:,i) = param_mat * transpose(transf_mat) * Theta;
-    M_reconstruct(:,i) = param_mat * transpose(transf()) * THETA;
+    M_reconstruct(:,i) = param_mat * transpose(transf_mat) * Theta;
+%     M_reconstruct(:,i) = param_mat * transpose(transf()) * THETA;
     fprintf('Mass %d -th, ',i);
     toc    
 end
 M_reconstruct = M_reconstruct + diag([5, 5/2, 5/3, 5/4, 5/5, 5/6]); %% Adding Armature values
 
+syms pc_6z;
+
+diff(M_reconstruct,pc_6z)
+
+M_reconstruct = subs(M_reconstruct,pc_6z, q1);
 tic
-matlabFunction(M_reconstruct,'File','generated_functions/funMass_UR5e', ...
+matlabFunction(M_reconstruct,'File','generated_functions/funMass_Fanuc', ...
     'Vars',[q1, q2, q3, q4, q5, q6,...
             ],'Outputs',{'Mass'});
 toc
@@ -50,7 +55,7 @@ for i = 1:n_state
 end
 
 tic
-matlabFunction(C_reconstruct,'File','generated_functions/funCori_UR5e', ...
+matlabFunction(C_reconstruct,'File','generated_functions/funCori_Fanuc', ...
     'Vars',[q1, q2, q3, q4, q5, q6, dq1, dq2, dq3, dq4, dq5, dq6...
             ],'Outputs',{'Coriolis'});
 toc
@@ -66,7 +71,7 @@ toc
 
 
 tic
-matlabFunction(G_reconstruct,'File','generated_functions/funGrav_UR5e', ...
+matlabFunction(G_reconstruct,'File','generated_functions/funGrav_Fanuc', ...
     'Vars',[q1, q2, q3, q4, q5, q6,...
             ],'Outputs',{'Gravity'});
 toc

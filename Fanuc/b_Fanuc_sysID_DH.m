@@ -3,10 +3,19 @@ clear; close all; clc;
 % addpath('utils/')
 addpath('generated_functions/')
 
-alpha = [-pi/2, pi, pi/2, -pi/2, pi/2, pi];
-d = [330, 0, 0, -420, 0, -230] * 0.001; % d is given in z-direction
-a = [50, 440, -35, 0, 0, -17.5] * 0.001; % a is given in x-direction
-offset = [0, -pi/2, pi, 0, 0, pi];
+% alpha = [-pi/2, pi, pi/2, -pi/2, pi/2, pi];
+% % d = [330, 0, 0, -420, 0, -230] * 0.001; % d is given in z-direction
+% % a = [50, 440, -35, 0, 0, -17.5] * 0.001; % a is given in x-direction
+% d = [330, 0, 0, -420, 0, -320] * 0.001; % updated 4/14/2023
+% a = [50, 440, -35, 0, 0, 0] * 0.001; % updated 4/14/2023
+% offset = [0, -pi/2, pi, 0, 0, pi];
+%%
+alpha = [-pi/2, pi, -pi/2, pi/2, -pi/2, pi]; % updated 4/20/2023
+% d = [330, 0, 0, -420, 0, -230] * 0.001; % d is given in z-direction
+% a = [50, 440, -35, 0, 0, -17.5] * 0.001; % a is given in x-direction
+d = [330, 0, 0, -420, 0, -320] * 0.001; % updated 4/20/2023
+a = [50, 440, 35, 0, 0, 0] * 0.001; % updated 4/20/2023
+offset = [0, -pi/2, 0, 0, 0, 0]; % updated 4/20/2023
 
 syms xx1 yy1 zz1
 syms xx2 yy2 zz2

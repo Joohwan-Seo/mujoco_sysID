@@ -1,4 +1,4 @@
-clear; close all; clc;
+clear;
 %%
 addpath('utils/')
 %% Dynamic equation derivation
@@ -15,9 +15,10 @@ tau = [tau1; tau2; tau3; tau4; tau5; tau6];
 
 V = M * ddq + C * dq + transpose(G);
 
-alpha = [-pi/2, 0, 0, -pi/2, pi/2, 0];
-d = [0.163, 0, 0, 0.134, 0.1, 0.098-0.004]; % d is given in z-direction
-a = [0, 0.425, 0.392, 0, 0, 0]; % a is given in x-direction
+alpha = [-pi/2, pi, -pi/2, pi/2, -pi/2, pi]; % updated 4/20/2023
+d = [330, 0, 0, -420, 0, -320] * 0.001; % updated 4/14/2023
+a = [50, 440, -35, 0, 0, 0] * 0.001; % updated 4/14/2023
+offset = [0, -pi/2, 0, 0, 0, 0]; % updated 4/20/2023
 
 syms xx1 yy1 zz1 real
 syms xx2 yy2 zz2 real
@@ -197,7 +198,7 @@ jacob = [jacob, jacob_53, jacob_54, jacob_55, jacob_56, jacob_57, jacob_58, ...
 
 
 tic
-matlabFunction(jacob,'File','utils/funJacobian_fanuc_damp_fric', ...
+matlabFunction(jacob,'File','utils/funJacobian_fanuc_full_param', ...
     'Vars',[q1, q2, q3, q4, q5, q6, dq1, dq2, dq3, dq4, dq5, dq6,...
             ddq1, ddq2, ddq3, ddq4, ddq5, ddq6,...
             ],'Outputs',{'jacob'});
